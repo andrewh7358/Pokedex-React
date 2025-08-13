@@ -1,0 +1,42 @@
+body{
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background-color: red;
+  padding: 16px;
+  border-radius: 16px;
+  max-width: 300px;
+  min-width: 300px;
+}
+
+.select {
+  width: 100%;
+}
+
+.spriteContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.sprite {
+  height: 300px;
+}
+
+.text {
+  background-color: white;
+  padding: 16px;
+  border-radius: 16px;
+  min-height: 100px;
+}
+
+.actionsContainer {
+  background-color: white;
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 16px;
+}
+
+.floatRight {
+  float: right;
+}
