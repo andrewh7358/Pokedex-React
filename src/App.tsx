@@ -90,7 +90,7 @@ const App = () => {
             <input type='text' name={'filter'} value={filter} onChange={onChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
           </label>
         </div>
-        <select className='select' value={currentId}>
+        <select className='select' value={currentId} size={5}>
           {options}
         </select>
         <div id='spriteContainer' className='spriteContainer'>
