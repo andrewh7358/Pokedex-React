@@ -1,20 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { getPokemonList, getPokemonSpriteUrl, getPokemonText, KANTO_MAX_ID } from './api'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { getPokemonList, getPokemonSpriteUrl, getPokemonText, MAX_ID } from './api'
+
+interface PokemonDetails {
+  id: number
+  name: string
+  label: string
+}
+
+const MIN_FILTER_LENGTH = 2
 
 const App = () => {
-  const [pokemonNames, setPokemonNames] = useState([] as string[])
+  const [allPokemon, setAllPokemon] = useState([] as PokemonDetails[])
   const [currentId, setCurrentId] = useState(1)
+  const [filter, setFilter] = useState('')
+  const [filteredPokemon, setFilteredPokemon] = useState([] as PokemonDetails[])
   const [spriteUrl, setSpriteUrl] = useState('')
   const [text, setText] = useState('')
 
   useEffect(() => {
-    async function getNames() {
+    async function init() {
       const results = await getPokemonList()
-      const names = results.map(({ name }) => name[0].toUpperCase() + name.slice(1))
-      setPokemonNames(names)
+      const pokemon = results.map(({ name }, index) => {
+        return { id: index + 1, name: name, label: name[0].toUpperCase() + name.slice(1)}
+      })
+      setAllPokemon(pokemon)
     }
-    getNames()
+    init()
   }, [])
+
+  useEffect(() => {
+    setFilter('')
+  }, [currentId])
 
   useEffect(() => {
     async function getSpriteUrl() {
@@ -27,14 +43,31 @@ const App = () => {
   useEffect(() => {
     async function getText() {
       const text = await getPokemonText(currentId)
-      setText(text)
+      setText(`#${currentId}. ${text}`)
     }
     getText()
   }, [currentId])
 
-  const options = pokemonNames.map((name, index) => {
-    const id = index + 1
-    return <option key={id} value={id} onClick={() => setCurrentId(id)}>{name}</option>
+  useEffect(() => {
+    if (filter.length >= MIN_FILTER_LENGTH) {
+      const currentIndex = currentId - 1
+      const filtered = allPokemon.filter(({ name }, index) => name.includes(filter) && index !== currentIndex)
+      const current = allPokemon[currentIndex]
+      filtered.unshift(current)
+      setFilteredPokemon(filtered)
+    } else {
+      setFilteredPokemon([])
+    }
+  }, [filter])
+
+  const onChangeFilter = (e: FormEvent) => {
+    const { value } = e.target as HTMLInputElement
+    setFilter(value)
+  }
+
+  const pokemon = filteredPokemon.length ? filteredPokemon : allPokemon
+  const options = pokemon.map(({ id, label }) => {
+    return <option key={id} value={id} onClick={() => setCurrentId(id)}>{label}</option>
   })
 
   const sprite = <img id='sprite' className='sprite' />
@@ -45,12 +78,18 @@ const App = () => {
   }
 
   const previous = <button onClick={() => setCurrentId(currentId - 1)} disabled={currentId === 1}>Previous</button>
-  const next = <button className='floatRight' onClick={() => setCurrentId(currentId + 1)} disabled={currentId === KANTO_MAX_ID}>Next</button>
+  const next = <button className='floatRight' onClick={() => setCurrentId(currentId + 1)} disabled={currentId === MAX_ID}>Next</button>
 
   return (
     <>
-      <h1>Kanto Pokédex</h1>
+      <h1>Pokédex</h1>
       <div id='card' className='card'>
+        <div id='filterContainer' className='filterContainer'>
+          <label>
+            {'Filter: '}
+            <input type='text' name={'filter'} value={filter} onChange={onChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
+          </label>
+        </div>
         <select className='select' value={currentId}>
           {options}
         </select>
@@ -58,7 +97,7 @@ const App = () => {
           {sprite}
         </div>
         <div id='text' className='text'>
-          {`#${currentId}. ${text}`}
+          {text}
         </div>
         <div id='actionsContainer' className='actionsContainer'>
           {previous}

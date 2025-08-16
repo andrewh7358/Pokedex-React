@@ -1,8 +1,8 @@
-# Kanto Pokédex
+# Pokédex
 
-A simple Pokédex featuring the first 151 Pokémon from the Kanto region in TypeScript and React. This uses API that can be found at https://pokeapi.co/.
+A simple Pokédex in TypeScript and React. This uses API that can be found at https://pokeapi.co/.
 
-Select and view sprites and descriptions of various Pokémon.
+Filter and select Pokemon to view their sprites and descriptions.
 
 ## How to run
 

@@ -10,6 +10,12 @@ body{
   min-width: 300px;
 }
 
+.filterContainer {
+  background-color: white;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
 .select {
   width: 100%;
 }
