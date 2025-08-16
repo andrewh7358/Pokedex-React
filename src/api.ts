@@ -1,7 +1,7 @@
-export const KANTO_MAX_ID = 151
+export const MAX_ID = 1025
 
 export async function getPokemonList() {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=${KANTO_MAX_ID}`)
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=0&limit=${MAX_ID}`)
   const data = await res.json() as { results: { name: string }[] }
   return data.results
 }
