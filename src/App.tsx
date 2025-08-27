@@ -11,7 +11,7 @@ interface PokemonDetails {
 const MIN_FILTER_LENGTH = 2
 const INIT_ID = 1
 
-const App = () => {
+export const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [allPokemon, setAllPokemon] = useState([] as PokemonDetails[])
   const [currentId, setCurrentId] = useState(INIT_ID)
@@ -102,5 +102,3 @@ const App = () => {
     </div>
   )
 }
-
-export default App
