@@ -4,7 +4,7 @@ A simple Pokédex in TypeScript and React. This uses API that can be found at ht
 
 Filter and select Pokemon to view their sprites and descriptions.
 
-<img src='./Screenshot.png' alt='Screenshot' height='600'/>
+<img src='./Screenshot.png' alt='Screenshot' height='600px' />
 
 ## How to run
 

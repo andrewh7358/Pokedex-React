@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useMemo, useState } from 'react'
-import { getPokemonList, getPokemonSpriteUrl, getPokemonText, MAX_ID } from './api'
+import { getPokemonList, getPokemonSpriteUrl, getPokemonText } from './api'
 import { Card } from './Card'
 
 interface PokemonDetails {
@@ -9,12 +9,13 @@ interface PokemonDetails {
 }
 
 const MIN_FILTER_LENGTH = 2
-const INIT_ID = 1
+export const MIN_ID = 1
+export const MAX_ID = 1025
 
 export const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [allPokemon, setAllPokemon] = useState([] as PokemonDetails[])
-  const [currentId, setCurrentId] = useState(INIT_ID)
+  const [currentId, setCurrentId] = useState(MIN_ID)
   const [filter, setFilter] = useState('')
   const [filteredPokemon, setFilteredPokemon] = useState([] as PokemonDetails[])
   const [spriteUrl, setSpriteUrl] = useState('')
@@ -28,7 +29,7 @@ export const App = () => {
         return { id: index + 1, name: name, label: name[0].toUpperCase() + name.slice(1) }
       })
       setAllPokemon(pokemon)
-      onChangeId(INIT_ID)
+      onChangeId(MIN_ID)
     }
     init()
   }, [])
@@ -66,7 +67,7 @@ export const App = () => {
   }
 
   const pokemon = filteredPokemon.length ? filteredPokemon : allPokemon
-  const options = useMemo(() => pokemon.map(({ id, label }) => <option key={id} value={id}>{label}</option>), [pokemon])
+  const options = useMemo(() => pokemon.map(({ id, label }) => <option key={'option' + id} value={id}>{label}</option>), [pokemon])
 
   const sprite = <img id='sprite' className='sprite' />
   const spriteImgTag = document.getElementById('sprite') as HTMLImageElement
@@ -75,8 +76,19 @@ export const App = () => {
     spriteImgTag.src = isLoading ? 'https://i.gifer.com/ZZ5H.gif' : spriteUrl
   }
 
-  const previous = <button onClick={() => onChangeId(currentId - 1)} disabled={currentId === 1}>Previous</button>
-  const next = <button className='floatRight' onClick={() => onChangeId(currentId + 1)} disabled={currentId === MAX_ID}>Next</button>
+  const onGoTo = (e: FormEvent) => {
+    e.preventDefault()
+    const form = e.currentTarget as HTMLFormElement
+    const formData = new FormData(form)
+    const value = formData.get('goTo')
+    const goTo = Number(value)
+
+    if (isNaN(goTo) === false && goTo >= MIN_ID && goTo <= MAX_ID) {
+      onChangeId(goTo)
+      setFilter('')
+      setFilteredPokemon([])
+    }
+  }
 
   return (
     <div className='app'>
@@ -95,8 +107,10 @@ export const App = () => {
           {isLoading ? 'LOADING' : text}
         </div>
         <div className='actionsContainer'>
-          {previous}
-          {next}
+          <form onSubmit={onGoTo}>
+            <label htmlFor='goTo'>Go To: </label>
+            <input id='goTo' type='number' name='goTo' />
+          </form>
         </div>
       </Card>
     </div>
