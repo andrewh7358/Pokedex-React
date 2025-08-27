@@ -20,6 +20,7 @@ export const App = () => {
   const [filteredPokemon, setFilteredPokemon] = useState([] as PokemonDetails[])
   const [spriteUrl, setSpriteUrl] = useState('')
   const [text, setText] = useState('')
+  const [goTo, setGoTo] = useState('')
 
   useEffect(() => {
     async function init() {
@@ -76,18 +77,22 @@ export const App = () => {
     spriteImgTag.src = isLoading ? 'https://i.gifer.com/ZZ5H.gif' : spriteUrl
   }
 
-  const onGoTo = (e: FormEvent) => {
+  const onSubmitGoTo = (e: FormEvent) => {
     e.preventDefault()
-    const form = e.currentTarget as HTMLFormElement
-    const formData = new FormData(form)
-    const value = formData.get('goTo')
-    const goTo = Number(value)
+    const nextId = Number(goTo)
 
-    if (isNaN(goTo) === false && goTo >= MIN_ID && goTo <= MAX_ID) {
-      onChangeId(goTo)
-      setFilter('')
-      setFilteredPokemon([])
+    if (isNaN(nextId) || nextId < MIN_ID || nextId > MAX_ID) {
+      return
     }
+
+    onChangeId(nextId)
+    setFilter('')
+    setFilteredPokemon([])
+  }
+
+  const onChangeGoTo = (e: FormEvent) => {
+    const { value } = e.target as HTMLInputElement
+    setGoTo(value)
   }
 
   return (
@@ -107,9 +112,9 @@ export const App = () => {
           {isLoading ? 'LOADING' : text}
         </div>
         <div className='actionsContainer'>
-          <form onSubmit={onGoTo}>
+          <form onSubmit={onSubmitGoTo}>
             <label htmlFor='goTo'>Go To: </label>
-            <input id='goTo' type='number' name='goTo' />
+            <input id='goTo' type='number' name='goTo' onChange={onChangeGoTo} />
           </form>
         </div>
       </Card>
