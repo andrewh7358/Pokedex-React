@@ -2,6 +2,11 @@ body{
   font-family: Arial, sans-serif;
 }
 
+.app {
+  display: flex;
+  justify-content: center;
+}
+
 .card {
   background-color: red;
   padding: 16px;
@@ -29,7 +34,7 @@ body{
   height: 300px;
 }
 
-.text {
+.textContainer {
   background-color: white;
   padding: 16px;
   border-radius: 16px;

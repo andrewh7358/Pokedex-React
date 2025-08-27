@@ -1,5 +1,6 @@
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useMemo, useState } from 'react'
 import { getPokemonList, getPokemonSpriteUrl, getPokemonText, MAX_ID } from './api'
+import { Card } from './Card'
 
 interface PokemonDetails {
   id: number
@@ -21,28 +22,31 @@ const App = () => {
 
   useEffect(() => {
     async function init() {
+      setIsLoading(true)
       const results = await getPokemonList()
-      const pokemon = results.map(({ name }, index) => {
-        return { id: index + 1, name: name, label: name[0].toUpperCase() + name.slice(1)}
+      const pokemon = results.map(({ name }, index): PokemonDetails => {
+        return { id: index + 1, name: name, label: name[0].toUpperCase() + name.slice(1) }
       })
       setAllPokemon(pokemon)
+      onChangeId(INIT_ID)
     }
     init()
-    onChangeId(INIT_ID)
   }, [])
 
   const onChangeId = async (id: number) => {
     setCurrentId(id)
-    setFilter('')
-    setFilteredPokemon([])
-
     setIsLoading(true)
     const url = await getPokemonSpriteUrl(id)
     const text = await getPokemonText(id)
-    
     setSpriteUrl(url)
     setText(`#${id}. ${text}`)
     setIsLoading(false)
+  }
+
+  const onChangeIdEvent = async (e: FormEvent) => {
+    const { value } = e.target as HTMLSelectElement
+    const id = Number(value)
+    await onChangeId(id)
   }
 
   const onChangeFilter = (e: FormEvent) => {
@@ -62,43 +66,40 @@ const App = () => {
   }
 
   const pokemon = filteredPokemon.length ? filteredPokemon : allPokemon
-  const options = pokemon.map(({ id, label }) => {
-    return <option key={id} value={id} onClick={() => onChangeId(id)}>{label}</option>
-  })
+  const options = useMemo(() => pokemon.map(({ id, label }) => <option key={id} value={id}>{label}</option>), [pokemon])
 
   const sprite = <img id='sprite' className='sprite' />
   const spriteImgTag = document.getElementById('sprite') as HTMLImageElement
 
   if (spriteImgTag) {
-    spriteImgTag.src = spriteUrl
+    spriteImgTag.src = isLoading ? 'https://i.gifer.com/ZZ5H.gif' : spriteUrl
   }
 
   const previous = <button onClick={() => onChangeId(currentId - 1)} disabled={currentId === 1}>Previous</button>
   const next = <button className='floatRight' onClick={() => onChangeId(currentId + 1)} disabled={currentId === MAX_ID}>Next</button>
 
   return (
-    <>
-      <h1>Pokédex</h1>
-      <div id='card' className='card'>
-        <div id='filterContainer' className='filterContainer'>
-          <label>Filter: </label>
-          <input type='text' name={'filter'} value={filter} onChange={onChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
+    <div className='app'>
+      <Card className='card'>
+        <div className='filterContainer'>
+          <label htmlFor='filter'>Filter: </label>
+          <input id='filter' type='text' value={filter} onChange={onChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
         </div>
-        <select className='select' value={currentId} size={5}>
+        <select className='select' value={currentId} size={5} onChange={onChangeIdEvent}>
           {options}
         </select>
-        <div id='spriteContainer' className='spriteContainer'>
+        <div className='spriteContainer'>
           {sprite}
         </div>
-        <div id='text' className='text'>
+        <div className='textContainer'>
           {isLoading ? 'LOADING' : text}
         </div>
-        <div id='actionsContainer' className='actionsContainer'>
+        <div className='actionsContainer'>
           {previous}
           {next}
         </div>
-      </div>
-    </>
+      </Card>
+    </div>
   )
 }
 
