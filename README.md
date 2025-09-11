@@ -1,6 +1,6 @@
 # Pokédex
 
-A simple Pokédex in TypeScript and React. This uses API that can be found at https://pokeapi.co/.
+A simple Pokédex in TypeScript and React. This project uses the [Pokémon API](https://pokeapi.co/).
 
 Filter and select Pokemon to view their sprites and descriptions.
 
