@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useMemo, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react'
 import { getPokemonList, getPokemonSpriteUrl, getPokemonText } from './api'
 import { Card } from './Card'
 
@@ -23,19 +23,19 @@ export const App = () => {
   const [goTo, setGoTo] = useState('')
 
   useEffect(() => {
-    async function init() {
+    const init = async () => {
       setIsLoading(true)
       const results = await getPokemonList()
       const pokemon = results.map(({ name }, index): PokemonDetails => {
-        return { id: index + 1, name: name, label: name[0].toUpperCase() + name.slice(1) }
+        return { id: index + 1, name, label: name[0].toUpperCase() + name.slice(1) }
       })
       setAllPokemon(pokemon)
-      onChangeId(MIN_ID)
+      handleChangeId(MIN_ID)
     }
     init()
   }, [])
 
-  const onChangeId = async (id: number) => {
+  const handleChangeId = async (id: number) => {
     setCurrentId(id)
     setIsLoading(true)
     const url = await getPokemonSpriteUrl(id)
@@ -45,14 +45,14 @@ export const App = () => {
     setIsLoading(false)
   }
 
-  const onChangeIdEvent = async (e: FormEvent) => {
-    const { value } = e.target as HTMLSelectElement
+  const handleChangeIdEvent = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target
     const id = Number(value)
-    await onChangeId(id)
+    await handleChangeId(id)
   }
 
-  const onChangeFilter = (e: FormEvent) => {
-    const { value } = e.target as HTMLInputElement
+  const handleChangeFilter = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
     setFilter(value)
 
     if (value.length >= MIN_FILTER_LENGTH) {
@@ -77,7 +77,7 @@ export const App = () => {
     spriteImgTag.src = isLoading ? 'https://i.gifer.com/ZZ5H.gif' : spriteUrl
   }
 
-  const onSubmitGoTo = (e: FormEvent) => {
+  const handleGoTo = (e: FormEvent) => {
     e.preventDefault()
     const nextId = Number(goTo)
 
@@ -85,13 +85,13 @@ export const App = () => {
       return
     }
 
-    onChangeId(nextId)
+    handleChangeId(nextId)
     setFilter('')
     setFilteredPokemon([])
   }
 
-  const onChangeGoTo = (e: FormEvent) => {
-    const { value } = e.target as HTMLInputElement
+  const handleChangeGoTo = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
     setGoTo(value)
   }
 
@@ -100,9 +100,9 @@ export const App = () => {
       <Card className='card'>
         <div className='filterContainer'>
           <label htmlFor='filter'>Filter: </label>
-          <input id='filter' type='text' value={filter} onChange={onChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
+          <input id='filter' type='text' value={filter} onChange={handleChangeFilter} placeholder={`min ${MIN_FILTER_LENGTH} characters`} />
         </div>
-        <select className='select' value={currentId} size={5} onChange={onChangeIdEvent}>
+        <select className='select' value={currentId} size={5} onChange={handleChangeIdEvent}>
           {options}
         </select>
         <div className='spriteContainer'>
@@ -112,9 +112,9 @@ export const App = () => {
           {isLoading ? 'LOADING' : text}
         </div>
         <div className='actionsContainer'>
-          <form onSubmit={onSubmitGoTo}>
+          <form onSubmit={handleGoTo}>
             <label htmlFor='goTo'>Go To: </label>
-            <input id='goTo' type='number' name='goTo' onChange={onChangeGoTo} />
+            <input id='goTo' type='number' name='goTo' onChange={handleChangeGoTo} />
           </form>
         </div>
       </Card>
