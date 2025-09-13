@@ -2,9 +2,7 @@
 
 A simple Pokédex in TypeScript and React. This project uses the [Pokémon API](https://pokeapi.co/).
 
-Filter and select Pokemon to view their sprites and descriptions.
-
-There is a newer version of this [here](https://github.com/andrewh7358/Pokedex-react).
+Select a Pokémon to view their sprite and basic information. You can filter names and go to a specific Pokémon id.
 
 <img src='./demo.gif' alt='demo' height='600px' />
 

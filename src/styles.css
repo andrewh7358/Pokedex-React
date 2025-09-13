@@ -1,4 +1,5 @@
-body{
+body {
+  padding: 2rem;
   font-family: Arial, sans-serif;
 }
 
@@ -8,46 +9,52 @@ body{
 }
 
 .card {
-  background-color: red;
-  padding: 16px;
+  width: 600px;
+  height: 376px;
+  padding: 32px;
   border-radius: 16px;
-  max-width: 300px;
-  min-width: 300px;
+  background-color: lightcyan;
 }
 
-.filterContainer {
-  background-color: white;
-  padding: 8px;
-  margin-bottom: 8px;
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
-.select {
-  width: 100%;
+.flexRow {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+label {
+  margin-right: 4px;
+}
+
+input {
+  flex: 1;
+  margin-right: 16px;
 }
 
 .spriteContainer {
-  display: flex;
-  justify-content: center;
+  width: 300px;
+  height: 300px;
+  margin: 16px 0;
 }
 
 .sprite {
+  width: 300px;
   height: 300px;
 }
 
-.textContainer {
-  background-color: white;
-  padding: 16px;
-  border-radius: 16px;
-  min-height: 100px;
+.infoRow {
+  margin-bottom: 16px;
 }
 
 .actionsContainer {
-  background-color: white;
-  padding: 16px;
-  border-radius: 16px;
-  margin-top: 16px;
+  display: flex;
+  justify-content: end;
 }
 
-.floatRight {
-  float: right;
+.action {
+  margin-right: 16px;
 }

@@ -2,12 +2,11 @@ import React from 'react'
 
 interface CardProps {
   children: React.ReactNode
-  className: string
 }
 
-export const Card = ({ children, className }: CardProps) => {
+export const Card = ({ children }: CardProps) => {
   return (
-    <div className={className}>
+    <div className='card'>
       {children}
     </div>
   )
