@@ -6,7 +6,7 @@ import { SelectPage } from './SelectPage'
 import { normailizeName } from './util'
 
 export const MIN_ID = 1
-export const MAX_ID = 1025
+export const MAX_ID = 151
 export const MIN_FILTER_LENGTH = 2
 
 export const App = () => {
