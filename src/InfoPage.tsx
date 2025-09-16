@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getPokemonDetails, getPokemonSpriteUrl, getPokemonText } from './api'
+import { getPokemonInfo, getPokemonSpriteUrl, getPokemonText } from './api'
 import { MAX_ID, MIN_ID } from './App'
 import { capitalizeStr, normailizeName } from './util'
 
@@ -9,28 +9,27 @@ interface InfoPageProps {
   onChangeId: (id: number) => void
 }
 
-interface PokemonDetails {
+interface PokemonInfo {
   name: string
   types: { type: { name: string} }[]
   height: string
   weight: string
+  text: string
 }
 
 export const InfoPage = ({ currentId, onBack, onChangeId }: InfoPageProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [text, setText] = useState('')
-  const [info, setInfo] = useState<PokemonDetails>({ name: '', types: [], height: '', weight: '' })
+  const [info, setInfo] = useState<PokemonInfo>({ name: '', types: [], height: '', weight: '', text: '' })
 
   useEffect(() => {
-    const init = async () => {
+    const fetch = async () => {
       setIsLoading(true)
+      const { name, types, height, weight } = await getPokemonInfo(currentId)
       const text = await getPokemonText(currentId)
-      const res = await getPokemonDetails(currentId)
-      setText(text)
-      setInfo({ name: normailizeName(res.name), types: res.types, height: res.height, weight: res.weight })
+      setInfo({ name: normailizeName(name), types, height, weight, text })
       setIsLoading(false)
     }
-    init()
+    fetch()
   }, [currentId])
 
   const sprite = <img id='sprite' alt='sprite' className='sprite' />
@@ -56,7 +55,7 @@ export const InfoPage = ({ currentId, onBack, onChangeId }: InfoPageProps) => {
         {`Weight: ${Number(info.weight) / 10} kg`}
       </div>
       <div className='infoRow'>
-        {text}
+        {info.text}
       </div>
     </>
   )

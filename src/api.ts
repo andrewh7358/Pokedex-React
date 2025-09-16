@@ -17,7 +17,7 @@ export const getPokemonText = async (id: number) => {
   return englishEntry.flavor_text.replaceAll('\u000C', ' ')
 }
 
-export const getPokemonDetails = async (id: number) => {
+export const getPokemonInfo = async (id: number) => {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
   const data = await res.json() as { name: string,  types: { type: { name: string } }[], height: string, weight: string }
   return data
