@@ -68,8 +68,8 @@ export const InfoPage = ({ currentId, onBack, onChangeId }: InfoPageProps) => {
           {sprite}
         </div>
         <div className='actionsContainer'>
-          <button className='action' disabled={currentId === MIN_ID} onClick={() => onChangeId(currentId - 1)}>Prev</button>
-          <button className='action' disabled={currentId === MAX_ID} onClick={() => onChangeId(currentId + 1)}>Next</button>
+          <button className='action' disabled={isLoading || currentId === MIN_ID} onClick={() => onChangeId(currentId - 1)}>Prev</button>
+          <button className='action' disabled={isLoading || currentId === MAX_ID} onClick={() => onChangeId(currentId + 1)}>Next</button>
         </div>
       </div>
       <div>
