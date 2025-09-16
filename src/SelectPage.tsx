@@ -1,34 +1,17 @@
-import React, { ChangeEvent, FormEvent, JSX, MouseEvent, useEffect, useState } from 'react'
-import { getPokemonList } from './api'
-import { MAX_ID, MIN_ID } from './App'
-import { normailizeName } from './util'
+import React, { ChangeEvent, FormEvent, JSX, MouseEvent, useState } from 'react'
+import { MAX_ID, MIN_FILTER_LENGTH, MIN_ID } from './App'
 
 interface SelectPageProps {
+  allOptions: JSX.Element[]
   currentId: number
+  filter: string
+  filteredOptions: JSX.Element[]
   onSelect: (id: number) => void
+  onChangeFilter: (filter: string) => void
 }
 
-const MIN_FILTER_LENGTH = 2
-
-export const SelectPage = ({ currentId, onSelect }: SelectPageProps) => {
-  const [allOptions, setAllOptions] = useState<JSX.Element[]>([])
-  const [filter, setFilter] = useState('')
-  const [filteredOptions, setFilteredOptions] = useState<JSX.Element[]>([])
+export const SelectPage = ({ allOptions, currentId, filter, filteredOptions, onSelect, onChangeFilter }: SelectPageProps) => {
   const [goTo, setGoTo] = useState('')
-
-  useEffect(() => {
-    const init = async () => {
-      const res = await getPokemonList()
-      const all = res.map(({ name }, index) => {
-        const id = index + 1
-        const key = `${name.replaceAll('-', '')}_${id}`
-        const label = normailizeName(name)
-        return <option key={key} value={id}>{label}</option>
-      })
-      setAllOptions(all)
-    }
-    init()
-  }, [])
 
   const handleSelect = (e: MouseEvent) => {
     const { value } = e.target as HTMLSelectElement
@@ -38,16 +21,7 @@ export const SelectPage = ({ currentId, onSelect }: SelectPageProps) => {
 
   const handleChangeFilter = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
-    setFilter(value)
-
-    if (value.length >= MIN_FILTER_LENGTH) {
-      const lowerStr = value.replaceAll(' ', '').toLowerCase()
-      const currentIndex = currentId - 1
-      const filtered = allOptions.filter((option, index) => option.key!.includes(lowerStr) && index !== currentIndex)
-      const current = allOptions[currentIndex]
-      filtered.unshift(current)
-      setFilteredOptions(filtered)
-    }
+    onChangeFilter(value)
   }
 
   const handleGoTo = (e: FormEvent) => {
@@ -58,6 +32,7 @@ export const SelectPage = ({ currentId, onSelect }: SelectPageProps) => {
       return
     }
 
+    onChangeFilter('')
     onSelect(nextId)
   }
 
@@ -80,7 +55,7 @@ export const SelectPage = ({ currentId, onSelect }: SelectPageProps) => {
           <input id='goTo' type='number' onChange={handleChangeGoTo} placeholder='(press Enter)' />
         </form>
       </div>
-      <select value={currentId} size={18} onClick={handleSelect}>
+      <select defaultValue={currentId} size={18} onClick={handleSelect}>
         {options}
       </select>
     </div>
