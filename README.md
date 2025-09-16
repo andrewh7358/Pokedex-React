@@ -6,6 +6,8 @@ Select a Pokémon to view their sprite and basic information. You can filter nam
 
 <img src='./demo.gif' alt='demo' height='600px' />
 
+Spinner GIF sourced from [Gifer](https://gifer.com/en/ZZ5H).
+
 ## How to run
 
 In the project directory, run `npm install` then `npm start`.

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getPokemonInfo, getPokemonSpriteUrl, getPokemonText } from './api'
 import { MAX_ID, MIN_ID } from './App'
+import spinner from './spinner.gif'
 import { capitalizeStr, normailizeName } from './util'
 
 interface InfoPageProps {
@@ -36,7 +37,7 @@ export const InfoPage = ({ currentId, onBack, onChangeId }: InfoPageProps) => {
   const spriteImgTag = document.getElementById('sprite') as HTMLImageElement
 
   if (spriteImgTag) {
-    spriteImgTag.src = isLoading ? 'https://i.gifer.com/ZZ5H.gif' : getPokemonSpriteUrl(currentId)
+    spriteImgTag.src = isLoading ? spinner : getPokemonSpriteUrl(currentId)
   }
 
   const types = info.types.map((type) => capitalizeStr(type.type.name)).join(', ')
